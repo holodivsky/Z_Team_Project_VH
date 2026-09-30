@@ -1,0 +1,9 @@
+@EndUserText.label: 'Vertrieb - Service Definition'
+define service Z02_SD_SALES {
+  expose Z02_C_CUSTOMER  as Customer;
+  expose Z02_C_ORDER     as SalesOrder;
+  expose Z02_C_ORDERITEM as OrderItem;
+  expose Z02_I_Product   as Product;
+  expose I_Country       as Country;
+  expose I_Currency      as Currency;
+}

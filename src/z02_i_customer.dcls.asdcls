@@ -1,0 +1,10 @@
+@EndUserText.label: 'Zugriffskontrolle Kunde'
+@MappingRole: true
+define role Z02_I_CUSTOMER {
+    grant 
+        select
+            on
+                Z02_I_CUSTOMER
+                    where ( Country ) = aspect pfcg_auth( Z02_CUST, Z02LAND, ACTVT = '03' );
+                        
+}

@@ -1,0 +1,134 @@
+managed implementation in class zbp_z02_i_customer unique;
+strict ( 2 );
+with draft;
+
+define behavior for Z02_I_Customer alias Customer
+persistent table z02_customer
+draft table z02_customer_d
+lock master
+total etag LastChangedAt
+authorization master ( global  )
+{
+  field ( readonly ) CustomerUUID;
+  field ( numbering : managed ) CustomerUUID;
+
+  create;
+  update;
+  delete;
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  association _Order { create; with draft; }
+
+  mapping for z02_customer
+    {
+      CustomerUUID       = customer_uuid;
+      CustomerID         = customer_id;
+      CompanyName        = company_name;
+      CustomerType       = customer_type;
+      Street             = street;
+      PostalCode         = postal_code;
+      City               = city;
+      Country            = country;
+      Phone              = phone;
+      Email              = email;
+      PriceGroup         = price_group;
+      DeletionFlag       = deletion_flag;
+      CreatedBy          = created_by;
+      CreatedAt          = created_at;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}
+
+define behavior for Z02_I_Order alias Order
+persistent table z02_order
+draft table z02_order_d
+lock dependent by _Customer
+authorization dependent by _Customer
+etag master LocalLastChangedAt
+{
+  field ( readonly ) OrderUUID, CustomerUUID;
+  field ( numbering : managed ) OrderUUID;
+
+  update;
+  delete;
+
+  determination setOrderID on save { create; }
+  determination setInitialValues on modify { create; }
+
+  validation validateDeliveryDate on save { create; update; field DeliveryDate; }
+
+  association _Customer { with draft; }
+  association _Item { create; with draft; }
+
+  mapping for z02_order
+    {
+      OrderUUID          = order_uuid;
+      CustomerUUID       = customer_uuid;
+      OrderID            = order_id;
+      OrderDate          = order_date;
+      DeliveryDate       = delivery_date;
+      NetAmount          = net_amount;
+      DepositTotal       = deposit_total;
+      Currency           = currency;
+      OrderStatus        = order_status;
+      CreatedBy          = created_by;
+      CreatedAt          = created_at;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}
+
+define behavior for Z02_I_OrderItem alias OrderItem
+persistent table z02_order_item
+draft table z02_order_item_d
+lock dependent by _Customer
+authorization dependent by _Customer
+etag master LocalLastChangedAt
+{
+  field ( readonly ) ItemUUID, OrderUUID, CustomerUUID;
+  field ( numbering : managed ) ItemUUID;
+
+  update;
+  delete;
+
+
+  determination setCustomerUUID      on modify { create; }
+  determination setItemNumber        on save   { create; }
+  determination setItemDefaults      on modify { create; field ProductUUID; }
+  determination calculateItemAmount  on modify { create; field Quantity, NetPrice; }
+  determination calculateOrderTotals on modify { create; field ItemAmount, DepositTotal; }
+
+  validation validateQuantity on save { create; update; field Quantity; }
+  validation validateProduct on save { create; update; field ProductUUID; }
+
+  association _Order { with draft; }
+  association _Customer { with draft; }
+
+  mapping for z02_order_item
+    {
+      ItemUUID           = item_uuid;
+      OrderUUID          = order_uuid;
+      CustomerUUID       = customer_uuid;
+      ItemNumber         = item_number;
+      ProductUUID        = product_uuid;
+      Quantity           = quantity;
+      QuantityUnit       = quantity_unit;
+      NetPrice           = net_price;
+      ItemAmount         = item_amount;
+      DepositTotal       = deposit_total;
+      Currency           = currency;
+      CreatedBy          = created_by;
+      CreatedAt          = created_at;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}

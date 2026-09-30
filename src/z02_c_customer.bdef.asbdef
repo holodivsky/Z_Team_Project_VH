@@ -1,0 +1,36 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for Z02_C_CUSTOMER alias Customer
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Order { create; with draft; }
+}
+
+define behavior for Z02_C_ORDER alias Order
+{
+  use update;
+  use delete;
+
+  use association _Customer { with draft; }
+  use association _Item { create; with draft; }
+}
+
+define behavior for Z02_C_ORDERITEM alias OrderItem
+{
+  use update;
+  use delete;
+
+  use association _Order { with draft; }
+  use association _Customer { with draft; }
+}

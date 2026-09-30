@@ -1,0 +1,80 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: {
+  typeName: 'Kunde',
+  typeNamePlural: 'Kunden',
+  title: { type: #STANDARD, value: 'CompanyName' },
+  description: { type: #STANDARD, value: 'CustomerID' }
+}
+
+annotate view Z02_C_CUSTOMER with
+{
+    @UI.facet: [ { id: 'Kunde',
+                 purpose: #STANDARD,
+                 type: #IDENTIFICATION_REFERENCE,
+                 label: 'Kundendaten',
+                 position: 10 },
+               { id: 'Auftraege',
+                 purpose: #STANDARD,
+                 type: #LINEITEM_REFERENCE,
+                 label: 'Aufträge',
+                 position: 20,
+                 targetElement: '_Order' } ]
+
+  @UI.hidden: true
+  CustomerUUID;
+
+  @UI.lineItem: [ { position: 10, label: 'Kundennummer' } ]
+  @UI.identification: [ { position: 10, label: 'Kundennummer' } ]
+  @UI.selectionField: [ { position: 10 } ]
+  CustomerID;
+
+  @UI.lineItem: [ { position: 20, label: 'Firmenname' } ]
+  @UI.identification: [ { position: 20, label: 'Firmenname' } ]
+  @UI.selectionField: [ { position: 20 } ]
+  CompanyName;
+
+  @UI.lineItem: [ { position: 30, label: 'Typ' } ]
+  @UI.identification: [ { position: 30, label: 'Kundentyp' } ]
+  @UI.selectionField: [ { position: 30 } ]
+  CustomerCategory;
+
+  @UI.identification: [ { position: 40, label: 'Straße' } ]
+  Street;
+
+  @UI.identification: [ { position: 50, label: 'PLZ' } ]
+  PostalCode;
+
+  @UI.lineItem: [ { position: 40, label: 'Ort' } ]
+  @UI.identification: [ { position: 60, label: 'Ort' } ]
+  City;
+
+  @UI.lineItem: [ { position: 50, label: 'Land' } ]
+  @UI.identification: [ { position: 70, label: 'Land' } ]
+  @UI.selectionField: [ { position: 40 } ]
+  Country;
+
+  @UI.identification: [ { position: 80, label: 'Telefon' } ]
+  Phone;
+
+  @UI.identification: [ { position: 90, label: 'E-Mail' } ]
+  Email;
+
+  @UI.lineItem: [ { position: 60, label: 'Preisgruppe' } ]
+  @UI.identification: [ { position: 100, label: 'Preisgruppe' } ]
+  PriceGroup;
+
+  @UI.hidden: true
+  DeletionFlag;
+
+  @UI.hidden: true
+  CreatedBy;
+  @UI.hidden: true
+  CreatedAt;
+  @UI.hidden: true
+  LastChangedBy;
+  @UI.hidden: true
+  LastChangedAt;
+  @UI.hidden: true
+  LocalLastChangedAt;
+}
